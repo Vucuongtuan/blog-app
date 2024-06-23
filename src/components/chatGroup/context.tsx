@@ -80,12 +80,15 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const sendMessage = useCallback((message: Message) => {
     SocketClient().emit("message", message);
   }, []);
-  const fetchPreviousMessages = useCallback((number: number) => {
-    console.log("=========number===========================");
-    console.log(number);
-    console.log("====================================");
-    fetchData(number, true);
-  }, []);
+  const fetchPreviousMessages = useCallback(
+    (number: number) => {
+      console.log("=========number===========================");
+      console.log(number);
+      console.log("====================================");
+      fetchData(number, true);
+    },
+    [fetchData]
+  );
 
   return (
     <ChatContext.Provider

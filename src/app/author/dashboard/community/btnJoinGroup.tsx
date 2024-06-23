@@ -15,6 +15,7 @@ export default function BtnJoinGroup() {
       setListGroup(res.data);
     };
     getGroup();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleJoinGroup = async (id: string, name: string) => {
     setLoading(true);

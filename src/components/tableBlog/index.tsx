@@ -28,6 +28,7 @@ export default function TableBlog() {
     if (profile) {
       fetchBlog();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
   const fetchBlog = async (page?: number) => {

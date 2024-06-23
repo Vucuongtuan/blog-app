@@ -117,7 +117,7 @@ function FormUpdateBlog({ id, defaultData }: { id: string; defaultData: any }) {
         return;
       }
     },
-    []
+    [form, id]
   );
   useEffect(() => {
     form.setValue("hashtags", listHashtags);

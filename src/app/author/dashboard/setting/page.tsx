@@ -7,28 +7,38 @@ import toast from "react-hot-toast";
 
 export default function SettingDashPage() {
   const { profile } = useStoreZ();
-  const [data, setData] = useState<IProfileAuthor | any[]>([]);
-
-  if (profile === null || profile === undefined) {
-    return <>Ko thể tìm thấy thông tin vui lòng thử lại sau</>;
-  }
+  const [data, setData] = useState<IProfileAuthor>();
 
   useEffect(() => {
-    const getQuery = async () => {
-      const res = await api.getAuthor(profile.id);
-      if (res.statusCode !== 200) {
-        toast.error(res.message);
-        return;
-      }
+    if (!profile) return;
 
-      return setData(res.data[0]);
+    const getQuery = async () => {
+      try {
+        const res = await api.getAuthor(profile.id);
+        if (res.statusCode !== 200) {
+          toast.error(res.message);
+          return;
+        }
+
+        setData(res.data[0]);
+      } catch (error) {
+        console.error("Error fetching author data:", error);
+        toast.error("Failed to fetch author data. Please try again later.");
+      }
     };
+
     getQuery();
-  }, [profile.id]);
+  }, [profile]);
+  if (!profile) {
+    return <>Ko thể tìm thấy thông tin vui lòng thử lại sau</>;
+  }
+  if (!data) {
+    return <>Loading...</>;
+  }
   return (
     <div className="p-2">
       <label htmlFor="Name">Tên tài khoản</label>
-      <span>{data.name}</span>
+      <span>{data?.name}</span>
     </div>
   );
 }
