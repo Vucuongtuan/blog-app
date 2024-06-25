@@ -35,7 +35,7 @@ const formCreateBlogSchema = z.object({
   hashtags: z.array(z.string()),
 });
 
-function FromCreateBlog({ reset }: { reset: () => void }) {
+function FromCreateBlog() {
   const [slugText, setSlugText] = useState<string>("");
   const [listHashtags, setListHashtags] = useState<string[]>([]);
   const [currentHashtag, setCurrentHashtag] = useState<string>("");
@@ -114,7 +114,6 @@ function FromCreateBlog({ reset }: { reset: () => void }) {
         setLoadings(false);
         toast.success(res.message);
         form.reset();
-        reset();
         window.location.reload();
         return;
       }
