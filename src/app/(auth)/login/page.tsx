@@ -1,7 +1,6 @@
 import { get } from "@/app/action";
 import FormLogin from "@/components/authForm/formLogin";
 import Container from "@/components/container";
-import { FlipWords } from "@/components/ui/flip-words";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import Link from "next/link";
 import React from "react";

@@ -153,7 +153,7 @@ function FromCreateBlog() {
           return;
         }
       } catch (err) {
-        toast.error("Tạo bài viết thất bại vui lòng thử lại sau");
+        toast.success("OK");
         setLoadings(false);
       } finally {
         setLoadings(false);

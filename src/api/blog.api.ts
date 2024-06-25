@@ -1,5 +1,7 @@
 import http from "@/lib/http";
 import { IBlog } from "@/types/blog.type";
+import axios from "axios";
+import Cookies from "js-cookie";
 export const getNewBlog = async (page?: number, limit?: number) => {
   try {
     const res = await http.get(
@@ -31,10 +33,10 @@ export const createBlog = async (data: any) => {
   formData.append("authorId", data.authorId);
   formData.append("hashtags", arrayHashTags);
 
-  const res = await http.post(`/blog/create`, formData);
-  console.log("====================================");
-  console.log(res);
-  console.log("====================================");
+  const res = await axios.post(`http://localhost:4000/blog/create`, formData, {
+    withCredentials: true,
+  });
+
   return res.data;
 };
 export const getBlogById = async (slug: string) => {
