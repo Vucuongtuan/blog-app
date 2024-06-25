@@ -11,7 +11,10 @@ export default function Header({ auth }: { auth: boolean }) {
       return <BtnAction />;
     }
     return (
-      <Link href="/login" className="w-full h-full font-medium">
+      <Link
+        href="/login"
+        className=" h-full font-medium px-2 leading-8  rounded-md border   dark:bg-transparent dark:text-white text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] dark:hover:border-white   dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255)] transition duration-200"
+      >
         Đăng nhập
       </Link>
     );
@@ -33,14 +36,9 @@ export default function Header({ auth }: { auth: boolean }) {
               </li>
             </ul>
           </nav>
-          <div className="w-1/3 flex justify-end space-x-4">
+          <div className="w-1/3 flex justify-end space-x-4 ">
             <ModeToggle />
-            <Button
-              className="float-right   "
-              aria-label={auth ? "Đăng xuất" : "Đăng nhập"}
-            >
-              {action()}
-            </Button>
+            {action()}
           </div>
         </div>
       </Container>

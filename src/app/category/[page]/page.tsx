@@ -28,6 +28,9 @@ export default async function DynamicPage({
   params: { page: string };
 }) {
   const check = checkHashtag(params.page);
+  console.log("====================================");
+  console.log(check);
+  console.log("====================================");
   if (check === null) {
     return (
       <Container>
@@ -37,7 +40,7 @@ export default async function DynamicPage({
   }
 
   const res = await getBlogByHashtag(check);
-  const blog = await res.data.posts;
+
   if (res.statusCode !== 200) {
     return (
       <Container>
@@ -45,19 +48,21 @@ export default async function DynamicPage({
       </Container>
     );
   }
+  const blog = await res?.data;
+
   return (
     <main className="w-full  h-auto">
       <Container>
         <section className="w-full grid lg:grid-cols-4 gap-8">
           {blog.map((item: IBlog, index: number) => (
             <Transition key={index}>
-              <Link href={item.slug} className="w-full h-full rounded-lg">
+              <Link href={`/${item.slug}`} className="w-full h-full rounded-lg">
                 <Image
                   src={item.thumbnail}
                   alt={item.title}
                   height={200}
                   width={200}
-                  className="h-[80%] w-full object-cover py-2 rounded-lg"
+                  className="h-[80%] rounded-lg w-full object-cover py-2 rounded-lg"
                 />
                 <div className="w-full h-[20%]">
                   <span className=" font-semibold font-md">{item.title}</span>

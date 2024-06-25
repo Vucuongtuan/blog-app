@@ -1,19 +1,20 @@
 import { get } from "@/app/action";
 import FormLogin from "@/components/authForm/formLogin";
+import FormRegister from "@/components/authForm/formRegister";
 import Container from "@/components/container";
 import { FlipWords } from "@/components/ui/flip-words";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import Link from "next/link";
 import React from "react";
 
-export default async function LoginPage() {
+export default async function RegisterPage() {
   const getToken = await get("access_token");
 
   return (
-    <main className="w-full h-auto py-4 min-h-screen">
+    <main className="w-full h-auto py-1 min-h-screen">
       <Container>
         <section className="w-full min-h-scree n flex justify-center ">
-          <div className="w-auto min-w-[500px] h-[400px] px-4 my-[100px]">
+          <div className="w-auto min-w-[500px] min-h-[400px] px-4 my-[100px]">
             {getToken ? (
               <>
                 <h1 className="text-4xl font-semibold">
@@ -35,18 +36,16 @@ export default async function LoginPage() {
             ) : (
               <>
                 <div className="text-4xl w-full font-semibold pb-4  ">
-                  <h1>Đăng nhập </h1>
+                  <h1>Đăng ký tài khoản </h1>
                   <p className="   -mt-4 text-xl">
-                    <TextGenerateEffect words={"cho người sáng tạo nội dung"} />
+                    <TextGenerateEffect
+                      words={
+                        "cùng bắt đầu tạo ra những bài viết tuyệt vời nào "
+                      }
+                    />
                   </p>
                 </div>
-                <FormLogin />
-                <p className=" py-4">
-                  Tạo tài khoản{" "}
-                  <Link href="/register" className="text-red-500">
-                    tại đây
-                  </Link>
-                </p>
+                <FormRegister />
               </>
             )}
           </div>

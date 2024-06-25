@@ -2,7 +2,7 @@
 
 import { deleteCookie } from "@/app/action";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,19 +11,33 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import useStoreZ from "@/lib/stores";
 
 export default function BtnAction() {
+  const { profile } = useStoreZ();
   const handleLogout = async () => {
     await deleteCookie("access_token");
-    localStorage.removeItem("profile");
-    window.location.reload();
+    return;
   };
+
+  // useEffect(() => {
+  //   if (profile === null) {
+  //     const deleteAccessToken = async () => {
+  //       await deleteCookie("access_token");
+  //       return;
+  //     };
+  //     deleteAccessToken();
+  //     return;
+  //   }
+  // }, []);
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+        <DropdownMenuTrigger className="rounded-md border px-2   dark:bg-transparent dark:text-white text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] dark:hover:border-white   dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255)] transition duration-200">
+          Open
+        </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuLabel>{profile?.name}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>Profile</DropdownMenuItem>
           <DropdownMenuItem>

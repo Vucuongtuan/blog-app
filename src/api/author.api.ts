@@ -47,6 +47,22 @@ export class ApiAuthor {
     const res = await http.get(`/auth/profile/${id}`);
     return res.data;
   }
+  async registerAccount(data: {
+    nameAccount: string;
+    name: string;
+    email: string;
+    password: string;
+    SDT: string;
+  }) {
+    const res = await http.post(`/auth/register`, {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      nameAccount: data.nameAccount,
+      SDT: data.SDT,
+    });
+    return res.data;
+  }
 }
 const api = new ApiAuthor();
 export default api;

@@ -30,7 +30,11 @@ export const CardStack = ({
     return () => clearInterval(interval);
   }, []);
   if (items.length === 0) {
-    return <>Empty</>;
+    return (
+      <div className="relative justify-center items-center  text-center  h-60  lg:w-72 md:h-60  w-full ">
+        <span className=" text-center">Empty</span>
+      </div>
+    );
   }
   return (
     <div className="relative  h-60  lg:w-72 md:h-60  w-full ">
@@ -50,7 +54,7 @@ export const CardStack = ({
           >
             <div className="font-normal text-neutral-700 dark:text-neutral-200">
               <p className="text-neutral-500 pb-6 font-medium dark:text-white">
-                {card.title}
+                <b>{card.title}</b>
               </p>
               <div
                 dangerouslySetInnerHTML={{

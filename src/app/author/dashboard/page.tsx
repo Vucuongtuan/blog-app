@@ -11,6 +11,9 @@ const StatsBlog = dynamic(() => import("@/components/viewHomeDash/statsBlog"), {
 
 export default async function DashboardAuthor() {
   const get = await getNewBlog(1, 8);
+  console.log("====================================");
+  console.log(get);
+  console.log("====================================");
   const getCurrentTimeOfDay = () => {
     const currentHour = new Date().getHours();
     if (currentHour < 12) {

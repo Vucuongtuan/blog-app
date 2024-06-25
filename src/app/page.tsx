@@ -16,16 +16,20 @@ export default async function Home() {
 
   if (getNew.statusCode === 404) {
     return (
-      <Container>
-        <h2>Chưa có bài viết nào</h2>
-      </Container>
+      <main className="min-h-[1200px]">
+        <Container>
+          <h2>Chưa có bài viết nào</h2>
+        </Container>
+      </main>
     );
   }
   if (getNew.statusCode !== 200) {
     return <h2>{getNew.message}</h2>;
   }
   const data = await getNew.data.data;
-
+  console.log("====================================");
+  console.log(data);
+  console.log("====================================");
   return (
     <main className="w-full h-auto py-4 min-h-screen">
       <Container>
@@ -84,13 +88,15 @@ export default async function Home() {
             ))}
           </section>
         </Suspense>
-        <section className="w-full h-auto min-h-[300px] flex mt-12">
-          <div className="w-2/3 flex flex-col">
-            <h2 className="text-2xl font-bold py-2">Xem thêm</h2>
-            <CardListBlog data={getblog} />
-          </div>
-          <div className="w-1/3">asd</div>
-        </section>
+        {getblog?.statusCode !== 200 ? null : (
+          <section className="w-full h-auto min-h-[300px] flex mt-12">
+            <div className="w-2/3 flex flex-col">
+              <h2 className="text-2xl font-bold py-2">Xem thêm</h2>
+              <CardListBlog data={getblog} />
+            </div>
+            <div className="w-1/3">asd</div>
+          </section>
+        )}
       </Container>
     </main>
   );
