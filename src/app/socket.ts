@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import Cookies from "js-cookie";
 
 export const SocketClient = (token?: string | null) => {
-  const socket = io("http://localhost:4000/", {
+  const socket = io(`${process.env.NEXT_PUBLIC_BASE_URL}`, {
     extraHeaders: {
       Authorization: `Bearer ${token}`,
     },
