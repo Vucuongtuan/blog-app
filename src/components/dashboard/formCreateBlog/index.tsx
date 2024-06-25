@@ -22,6 +22,7 @@ import { deleteCookie } from "@/app/action";
 import Schema from "./schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TabAi from "@/components/tabAi";
+import useStoreZ from "@/lib/stores";
 
 const formCreateBlogSchema = z.object({
   title: z.string().max(100, "Tiêu đề không quá 50 ký tự"),
@@ -44,6 +45,7 @@ function FromCreateBlog() {
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [content, setContent] = useState<string>("");
   const [loadings, setLoadings] = useState<boolean>(false);
+  const { logout } = useStoreZ();
   const form = useForm<z.infer<typeof formCreateBlogSchema>>({
     resolver: zodResolver(formCreateBlogSchema),
     defaultValues: {
@@ -86,36 +88,75 @@ function FromCreateBlog() {
   const onSubmit = useCallback(
     async (data: z.infer<typeof formCreateBlogSchema>) => {
       setLoadings(true);
-      const profile =
-        typeof window !== "undefined"
-          ? JSON.parse(localStorage.getItem("profile") ?? "null")
-          : "null";
-      if (profile === "null") {
-        setLoadings(false);
-        await deleteCookie("access_token");
-        return;
-      } else if (profile !== "null") {
-        const value = {
-          authorId: profile.id,
-          title: data.title,
-          description: data.description,
-          thumbnail: data.thumbnail,
-          content: data.content,
-          slug: data.slug,
-          hashtags: data.hashtags,
-        };
-
-        const res = await createBlog(value);
-        if (res.statusCode !== 201) {
+      try {
+        const profile =
+          typeof window !== "undefined"
+            ? JSON.parse(localStorage.getItem("profile") ?? "null")
+            : "null";
+        if (profile === "null") {
           setLoadings(false);
-          toast.error(res.message);
+          await deleteCookie("access_token");
+          return;
+        } else if (profile !== "null") {
+          const value = {
+            authorId: profile.id,
+            title: data.title,
+            description: data.description,
+            thumbnail: data.thumbnail,
+            content: data.content,
+            slug: data.slug,
+            hashtags: data.hashtags,
+          };
+
+          const res = await createBlog(value);
+          if (res.statusCode === 401 && res.message === "Unauthorized") {
+            await deleteCookie("access_token");
+            logout();
+            toast.custom((t) => (
+              <div
+                className={`${
+                  t.visible ? "animate-enter" : "animate-leave"
+                } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+              >
+                <div className="flex-1 w-0 p-4">
+                  <div className="flex items-start">
+                    <div className="ml-3 flex-1">
+                      <p className="text-sm font-medium text-gray-900">
+                        Ohh ! Phiên đăng nhập của bạn đã hết hạn
+                      </p>
+                      <p className="mt-1 text-sm text-gray-500">
+                        Vui lòng đăng nhập lại để tiếp tục viết bài
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex border-l border-gray-200">
+                  <button
+                    onClick={() => toast.dismiss(t.id)}
+                    className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            ));
+            return;
+          } else if (res.statusCode !== 201) {
+            setLoadings(false);
+            toast.error(res.message);
+            return;
+          }
+          setLoadings(false);
+          toast.success(res.message);
+          form.reset();
+          window.location.reload();
           return;
         }
+      } catch (err) {
+        toast.error("Tạo bài viết thất bại vui lòng thử lại sau");
         setLoadings(false);
-        toast.success(res.message);
-        form.reset();
-        window.location.reload();
-        return;
+      } finally {
+        setLoadings(false);
       }
     },
     []

@@ -28,10 +28,15 @@ const useStoreZ = create<AuthState>((set) => ({
       },
     })),
   logout: () =>
-    set((state) => ({
-      auth: false,
-      profile: null,
-    })),
+    set((state) => {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("profile");
+      }
+      return {
+        auth: false,
+        profile: null,
+      };
+    }),
 }));
 
 export default useStoreZ;

@@ -68,7 +68,7 @@ export default function FormLogin() {
       toast.success(loginQuery.message);
 
       // next to home page login successfully
-      router.push("/", { scroll: false });
+      router.replace("/", { scroll: false });
     } catch (err) {
       console.log("====================================");
       console.log(err);
