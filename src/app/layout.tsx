@@ -5,7 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "react-hot-toast";
 import LayoutProvider from "@/components/layout";
 import { cookies } from "next/headers";
-
+import { GoogleAnalytics } from "@next/third-parties/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -63,6 +63,7 @@ export default function RootLayout({
           </LayoutProvider>
         </ThemeProvider>
       </body>
+      <GoogleAnalytics gaId="G-8YSV7DTYN1" />
     </html>
   );
 }
