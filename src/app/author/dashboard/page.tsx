@@ -4,10 +4,7 @@ import Chart from "@/components/chart";
 import { getNewBlog } from "@/api/blog.api";
 import dynamic from "next/dynamic";
 import ListBlog from "@/components/listBlog";
-
-const StatsBlog = dynamic(() => import("@/components/viewHomeDash/statsBlog"), {
-  ssr: false,
-});
+import StatsBlog from "@/components/viewHomeDash/statsBlog";
 
 export default async function DashboardAuthor() {
   const get = await getNewBlog(1, 8);

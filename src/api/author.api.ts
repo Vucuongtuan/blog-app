@@ -41,7 +41,9 @@ export class ApiAuthor {
     return res.data;
   }
   async getBlogStatsByUser(userId: string) {
-    const res = await http.get(`/blog/stats/${userId}`);
+    const res = await http.get(`blog/stats/${userId}`, {
+      withCredentials: true,
+    });
     return res.data;
   }
   async getAuthor(id: string) {

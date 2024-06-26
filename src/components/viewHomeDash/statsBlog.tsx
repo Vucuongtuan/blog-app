@@ -20,6 +20,7 @@ export default function StatsBlog({
     if (profile !== null) {
       const get = async () => {
         const res = await api.getBlogStatsByUser(profile.id);
+
         if (res.statusCode !== 200) {
           toast.error(res.message);
         }
