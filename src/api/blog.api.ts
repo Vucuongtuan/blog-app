@@ -33,7 +33,7 @@ export const createBlog = async (data: any) => {
   formData.append("authorId", data.authorId);
   formData.append("hashtags", arrayHashTags);
 
-  const res = await axios.post(`http://localhost:4000/blog/create`, formData, {
+  const res = await http.post(`/blog/create`, formData, {
     withCredentials: true,
   });
 
