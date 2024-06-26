@@ -3,6 +3,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { ChatContext, ChatContextValue } from "./context";
 import { useInView } from "react-intersection-observer";
+import useStoreZ from "@/lib/stores";
 const ChatGroup: React.FC = () => {
   const { messages, sendMessage, fetchPreviousMessages } = useContext(
     ChatContext
@@ -11,17 +12,15 @@ const ChatGroup: React.FC = () => {
   const [changeMessage, setChangeMessage] = useState<string>("");
   const [loadMore, setLoadMore] = useState(true);
   const { ref, inView } = useInView();
-  const local =
-    typeof window !== undefined
-      ? JSON.parse(localStorage.getItem("profile") ?? "null")
-      : "null";
+  const { profile } = useStoreZ();
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+
   const handleSendMessage = () => {
     if (changeMessage.trim() !== "") {
       const payload = {
-        senderId: local?.id,
+        senderId: profile?.id,
         content: changeMessage,
-        senderName: local?.name,
+        senderName: profile?.name,
       } as {
         senderId: string;
         content: string;
@@ -31,21 +30,24 @@ const ChatGroup: React.FC = () => {
       setChangeMessage("");
     }
   };
+
   useEffect(() => {
     if (inView && loadMore) {
-      setPage((prev) => page + 1);
+      setPage((prev) => prev + 1);
       fetchPreviousMessages(page);
     }
-  }, [inView]);
+  }, [inView, loadMore, page, fetchPreviousMessages]);
+
   useEffect(() => {
     const messageContainer = messagesContainerRef.current;
     if (!messageContainer) return;
     messageContainer.scrollTop = messageContainer.scrollHeight;
-  }, []);
+  }, [messages]);
 
   useEffect(() => {
     fetchPreviousMessages(page);
   }, [fetchPreviousMessages, page]);
+
   useEffect(() => {
     const messageContainer = messagesContainerRef.current;
     if (!messageContainer) return;
@@ -62,32 +64,39 @@ const ChatGroup: React.FC = () => {
       messageContainer.removeEventListener("scroll", handleScroll);
     };
   }, [messagesContainerRef, fetchPreviousMessages]);
+
+  if (profile === null) {
+    return <>Please log in again.</>;
+  }
+  if (messages.length === 0) {
+    return <>Please wait...</>;
+  }
+
   return (
     <div className="w-full h-full">
       <div
-        className="h-[90%] w-full  p-2 overflow-y-scroll"
+        className="h-[90%] w-full p-2 overflow-y-scroll"
         ref={messagesContainerRef}
       >
         {loadMore && (
           <div ref={ref} className="mb-5 flex justify-center items-center">
             Loading ...
           </div>
-        )}{" "}
+        )}
         {messages.map((message, index) => (
           <div
             key={index}
             className={`message w-auto h-auto ${
-              local.id === message.senderId ? "text-right" : "text-left"
+              profile.id === message?.senderId ? "text-right" : "text-left"
             }`}
           >
-            {" "}
-            <div className="font-semibold">{message.senderName}</div>
+            <div className="font-semibold">{message?.senderName}</div>
             <div
               className={`p-2 rounded-lg bg-blue-600 max-w-[200px] overflow-wrap break-all ${
-                local.id === message.senderId ? "ml-auto" : ""
+                profile.id === message?.senderId ? "ml-auto" : ""
               }`}
             >
-              <span>{message.content}</span>
+              <span>{message?.content}</span>
             </div>
           </div>
         ))}

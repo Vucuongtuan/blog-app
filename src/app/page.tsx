@@ -27,9 +27,7 @@ export default async function Home() {
     return <h2>{getNew.message}</h2>;
   }
   const data = await getNew.data.data;
-  console.log("====================================");
-  console.log(data);
-  console.log("====================================");
+ 
   return (
     <main className="w-full h-auto py-4 min-h-screen">
       <Container>

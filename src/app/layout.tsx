@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import LayoutProvider from "@/components/layout";
 import { cookies } from "next/headers";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import Header from "@/components/layout/header";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

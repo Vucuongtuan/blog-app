@@ -15,11 +15,11 @@ import {
 import toast from "react-hot-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { loginAuthor } from "@/api/blog.api";
 import { create } from "@/app/action";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
+import api from "@/api/author.api";
 const formLoginSchema = z.object({
   identifier: z.string().min(2, "Phải ít nhất 2 ký tự").max(50),
   password: z.string().min(2, "Password phải từ 2 ký tự trở lên").max(50),
@@ -46,7 +46,10 @@ export default function FormLogin() {
     setIsLoading(true);
     try {
       //call api post login user
-      const loginQuery = await loginAuthor(values.identifier, values.password);
+      const loginQuery = await api.loginAuthor(
+        values.identifier,
+        values.password
+      );
 
       //if loginQuery failed
       if (loginQuery.statusCode !== 200) {

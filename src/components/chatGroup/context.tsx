@@ -5,11 +5,16 @@ import {
   useEffect,
   useCallback,
   useState,
+  useContext,
+  useRef,
 } from "react";
 import { SocketClient } from "@/app/socket";
 import { ApiAuthor } from "@/api/author.api";
 import toast from "react-hot-toast";
+import { useInView } from "react-intersection-observer";
+import useStoreZ from "@/lib/stores";
 
+// Define Message and ChatState interfaces
 interface Message {
   senderId: string;
   content: string;
@@ -20,11 +25,13 @@ interface ChatState {
   messages: Message[];
 }
 
+// Define ChatAction types
 type ChatAction =
   | { type: "ADD_MESSAGE"; payload: Message }
   | { type: "SET_MESSAGES"; payload: Message[] }
   | { type: "APPEND_MESSAGES"; payload: Message[] };
 
+// Reducer to manage chat state
 const chatReducer = (state: ChatState, action: ChatAction): ChatState => {
   switch (action.type) {
     case "ADD_MESSAGE":
@@ -38,20 +45,23 @@ const chatReducer = (state: ChatState, action: ChatAction): ChatState => {
   }
 };
 
+// Define ChatContextValue interface
 export interface ChatContextValue {
   messages: Message[];
   sendMessage: (message: Message) => void;
   fetchPreviousMessages: (number: number) => void;
 }
 
+// Create ChatContext
 export const ChatContext = createContext<ChatContextValue | null>(null);
 
+// ChatProvider component to provide chat state and actions
 export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(chatReducer, { messages: [] });
+
   const fetchData = useCallback(async (page?: number, append?: boolean) => {
     const api = new ApiAuthor();
     const res = await api.getALlMessage(page);
-
     if (res.statusCode !== 200) {
       toast.error(res.message);
       return;
@@ -66,10 +76,12 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     fetchData(1);
+  }, [fetchData]);
 
+  useEffect(() => {
     const socket = SocketClient();
     socket.on("message", (newMessage: any) => {
-      dispatch({ type: "ADD_MESSAGE", payload: newMessage.data });
+      dispatch({ type: "ADD_MESSAGE", payload: newMessage });
     });
 
     return () => {
@@ -78,13 +90,12 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   }, [fetchData]);
 
   const sendMessage = useCallback((message: Message) => {
+    dispatch({ type: "ADD_MESSAGE", payload: message });
     SocketClient().emit("message", message);
   }, []);
+
   const fetchPreviousMessages = useCallback(
     (number: number) => {
-      console.log("=========number===========================");
-      console.log(number);
-      console.log("====================================");
       fetchData(number, true);
     },
     [fetchData]

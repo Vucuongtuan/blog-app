@@ -28,9 +28,7 @@ export default async function DynamicPage({
   params: { page: string };
 }) {
   const check = checkHashtag(params.page);
-  console.log("====================================");
-  console.log(check);
-  console.log("====================================");
+
   if (check === null) {
     return (
       <Container>

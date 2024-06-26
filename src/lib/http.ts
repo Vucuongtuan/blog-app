@@ -17,16 +17,4 @@ class HttpBaseFetch {
 
 const http = new HttpBaseFetch().instance;
 
-http.interceptors.request.use(
-  async (config: any) => {
-    const token = Cookies.get("your_token_cookie_name");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 export default http;

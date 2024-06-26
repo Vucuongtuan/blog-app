@@ -15,13 +15,7 @@ export const getNewBlog = async (page?: number, limit?: number) => {
     };
   }
 };
-export const loginAuthor = async (identifier: string, password: string) => {
-  const res = await http.post(`/auth/login`, {
-    identifier,
-    password,
-  });
-  return res.data;
-};
+
 export const createBlog = async (data: any) => {
   const arrayHashTags = JSON.stringify(data.hashtags);
   const formData = new FormData();

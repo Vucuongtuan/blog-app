@@ -1,4 +1,5 @@
 import http from "@/lib/http";
+import axios from "axios";
 
 export const getAccountAUthor = async () => {
   const res = await http.get(`/auth/profile`);
@@ -63,6 +64,14 @@ export class ApiAuthor {
     });
     return res.data;
   }
+
+  loginAuthor = async (identifier: string, password: string) => {
+    const res = await http.post(`/auth/login`, {
+      identifier,
+      password,
+    });
+    return res.data;
+  };
 }
 const api = new ApiAuthor();
 export default api;

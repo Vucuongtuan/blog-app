@@ -1,6 +1,7 @@
 "use client";
 import { ApiAuthor } from "@/api/author.api";
 import { Button } from "@/components/ui/button";
+import useStoreZ from "@/lib/stores";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -8,7 +9,7 @@ export default function BtnJoinGroup() {
   const [loading, setLoading] = useState<boolean>(false);
   const [listGroup, setListGroup] = useState<any[]>([]);
   const api = new ApiAuthor();
-  const local = JSON.parse(localStorage.getItem("profile") ?? "null");
+  const { profile } = useStoreZ();
   useEffect(() => {
     const getGroup = async () => {
       const res = await api.getGroups();
@@ -20,13 +21,15 @@ export default function BtnJoinGroup() {
   const handleJoinGroup = async (id: string, name: string) => {
     setLoading(true);
     try {
-      const create = await api.joinGroup(local?.id, id, name);
-      if (create.statusCode !== 200) {
-        toast.error(create.message);
+      if (profile !== null) {
+        const create = await api.joinGroup(profile?.id, id, name);
+        if (create.statusCode !== 200) {
+          toast.error(create.message);
+          return;
+        }
+        toast.success(create.message);
         return;
       }
-      toast.success(create.message);
-      return;
     } catch (err) {
       toast.error("Vui lòng thử lại sau");
     } finally {
